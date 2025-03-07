@@ -1,0 +1,416 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    overflow: hidden; /* Evitar scroll */
+}
+
+header {
+    display: flex;
+    align-items: center;
+    background-color: #004a99;
+    color: white;
+    padding: 10px 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.logo {
+    height: 50px;
+    margin-right: 15px;
+}
+
+h1 {
+    font-size: 20px;
+    margin: 0;
+}
+
+#map {
+    position: absolute;
+    top: 70px; /* Para que no tape el header */
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 70px);
+}
+
+/* 🔍 Estilo de la barra de búsqueda */
+.search-container {
+    position: absolute;
+    top: 100px; /* Ajusta según sea necesario */
+    left: 20px; /* Mantiene la alineación a la izquierda */
+    z-index: 1000;
+    background-color: white;
+    padding: 10px;
+    border-radius: 25px; /* Bordes más redondeados */
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.3);
+    width: 550px;
+    display: flex;
+    align-items: center;
+}
+
+.search-box {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: none; /* Elimina el borde */
+    border-radius: 25px; /* Bordes redondeados */
+    outline: none; /* Quita el borde azul al hacer clic */
+    background-color: transparent;
+}
+
+/* Efecto cuando el input está enfocado */
+.search-box:focus {
+    box-shadow: 0px 0px 8px rgba(0, 74, 153, 0.5);
+}
+
+
+/* 🔴 Marcadores personalizados (tipo Google Maps) */
+.custom-marker {
+    position: relative;
+    width: 30px;
+    height: 42px;
+}
+
+/* 🔴 Pin rojo */
+.custom-marker .pin {
+    background-color: red;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* 🌊 Efecto de pulsación */
+.custom-marker .pulse {
+    width: 30px;
+    height: 30px;
+    background: rgba(255, 0, 0, 0.3);
+    border-radius: 50%;
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: pulse-animation 1.5s infinite;
+}
+
+@keyframes pulse-animation {
+    0% {
+        transform: translateX(-50%) scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateX(-50%) scale(2);
+        opacity: 0;
+    }
+}
+
+/* 🎯 Tooltip mejorado */
+.leaflet-tooltip {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 📌 Contenido del tooltip */
+.tooltip-content {
+    font-size: 16px; /* Aumenta el tamaño del texto */
+    font-weight: bold; /* Hace el texto más legible */
+    padding: 8px; /* Agrega un poco de espacio interno */
+}
+
+/* 📌 Ajustar el tamaño del panel para que coincida con el header */
+#infoPanel {
+    position: fixed;
+    top: 0;
+    right: -350px; /* Se oculta fuera de la pantalla */
+    width: 400px;  /* Ajusta el ancho al tamaño del header */
+    height: 100vh;
+    background: white;
+    box-shadow: -3px 0 10px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    border-left: 3px solid #004080; /* Borde del color del header */
+}
+
+/* ✅ Hacer visible el panel */
+#infoPanel.visible {
+    right: 0;
+}
+
+/* 📌 Encabezado del panel */
+.panel-header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: #004080;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    height: 50px;
+}
+
+/* 📌 Botón de alternar entre X y Flecha */
+#togglePanel {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    margin-right: 10px; /* Reduce la separación con el título */
+}
+
+/* 📌 Ajustar tamaño del texto dentro del panel */
+.panel-content {
+    flex: 1;
+    padding: 10px;
+    overflow: hidden;
+    font-size: 16px; /* Aumentar tamaño de letra */
+}
+
+/* 📌 Prestador individual */
+.prestador-item {
+    padding: 15px;
+    border-bottom: 1px solid #ccc;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* 📌 Panel oculto */
+.hidden {
+    display: none;
+}
+
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #004a99;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Distribuye el espacio entre los elementos */
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+header .logo {
+    height: 50px;
+}
+
+#cambiarVista {
+    margin-left: 20px; /* Empuja el botón a la derecha */
+    margin-right: 50px; /* Añade un margen derecho */
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#cambiarVista:hover {
+    background-color: #e65c00;
+}
+
+
+#map {
+    height: calc(100vh - 80px); /* Ajusta la altura del mapa */
+    width: 100%;
+}
+
+.search-container {
+    position: absolute;
+    top: auto;
+    bottom: 10px;
+    left: 10px;
+    z-index: 1000;
+    width: 250px;
+}
+
+.search-box {
+    padding: 10px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#infoPanel {
+    position: fixed;
+    top: 80px;
+    right: -300px;
+    width: 300px;
+    height: calc(100vh - 80px);
+    background-color: white;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease;
+}
+
+#infoPanel.hidden {
+    right: -300px;
+}
+
+#infoPanel.visible {
+    right: 0;
+}
+
+.panel-header {
+    background-color: #004a99;
+    color: white;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.panel-header h3 {
+    margin: 0;
+    flex-grow: 1;
+}
+
+#togglePanel {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.panel-content {
+    padding: 10px;
+    overflow-y: auto;
+    height: calc(100% - 50px);
+}
+
+/* Estilos para el modal */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro */
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto; /* Reducir el margen superior para más espacio */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%; /* Aumentar el ancho al 90% de la pantalla */
+    max-width: 1200px; /* Aumentar el ancho máximo */
+    height: 80vh; /* Altura del 80% de la ventana */
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Contenedor para los selectores (municipios y capas) */
+.selector-container {
+    display: flex;
+    gap: 20px; /* Espacio entre los selectores */
+    margin-bottom: 20px; /* Espacio inferior */
+}
+
+/* Grupo de selectores (municipios y capas) */
+.selector-group {
+    flex: 1; /* Hace que los selectores ocupen el mismo espacio */
+}
+
+/* Estilos para los selectores */
+.search-box {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #004a99; /* Borde azul */
+    border-radius: 5px; /* Bordes redondeados */
+    outline: none; /* Quita el borde azul al hacer clic */
+    background-color: white;
+    color: #004a99; /* Color del texto */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-box:focus {
+    border-color: #ff6600; /* Cambia el color del borde al enfocar */
+    box-shadow: 0 0 8px rgba(255, 102, 0, 0.5); /* Sombra al enfocar */
+}
+/* Estilos para el botón de filtro */
+button {
+    background-color: #ff6600; /* Color naranja similar al botón de filtro */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px; /* Bordes redondeados */
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #e65c00; /* Color naranja más oscuro al pasar el mouse */
+}
+
+/* Estilos para el mapa dentro del modal */
+#mapaDepartamento {
+    flex-grow: 1; /* Hacer que el mapa ocupe el espacio restante */
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    margin-top: 10px; /* Espacio entre el título y el mapa */
+}
+
+/* Estilos para el contenedor de prestadores */
+#contenedorPrestadores {
+    margin-top: 20px; /* Espacio superior */
+    padding: 10px;
+    background-color: #f9f9f9; /* Fondo gris claro */
+    border-radius: 5px; /* Bordes redondeados */
+    border: 1px solid #ddd; /* Borde sutil */
+    max-height: 200px; /* Altura máxima */
+    overflow-y: auto; /* Scroll vertical si es necesario */
+}
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: black;
+}
+
+/* Estilos para el mapa dentro del modal */
+#mapaDepartamento {
+    flex-grow: 1; /* Hacer que el mapa ocupe el espacio restante */
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    margin-top: 10px; /* Espacio entre el título y el mapa */
+}
+
